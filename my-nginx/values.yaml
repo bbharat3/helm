@@ -1,5 +1,5 @@
 deployment:
-  name: "mynginx"
+  name: "mynginx-app"
   nodeType: "test"
 replicaCount: 2
 contName: "nginx1"
