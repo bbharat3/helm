@@ -1,7 +1,7 @@
 deployment:
   name: "mynginx-app"
   nodeType: "test"
-replicaCount: 2
+replicaCount: 1
 contName: "nginx1"
 image:
   pullPolicy: Always
