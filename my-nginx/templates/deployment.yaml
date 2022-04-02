@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.deployment.name }}
+  labels:
+    nodeType: {{ .Values.deployment.nodeType  }}
+spec:
+  
+  replicas: {{ .Values.replicaCount }}
+  selector:  
+    matchLabels:
+      nodeType: {{ .Values.deployment.nodeType  }}   
+  template:
+    metadata:
+      labels:
+        nodeType: {{ .Values.deployment.nodeType  }}
+    spec:
+     
+      containers:
+        - name: {{ .Values.contName }}
+          
+          image: {{ .Values.image.name}}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+  

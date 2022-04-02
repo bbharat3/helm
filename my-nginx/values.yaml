@@ -1,0 +1,10 @@
+deployment:
+  name: "mynginx"
+  nodeType: "test"
+replicaCount: 2
+contName: "nginx1"
+image:
+  pullPolicy: Always
+  name: nginx
+service:
+  type: NodePort

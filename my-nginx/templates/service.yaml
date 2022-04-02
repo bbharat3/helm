@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  
+  labels:
+    app.kubernetes.io/managed-by: Helm
+    nodeType: test
+  name: mynginx
+spec:
+  type: {{ .Values.service.type}}
+  ports:
+  - port: 8080
+    protocol: TCP
+    targetPort: 80
+  selector:
+    nodeType: test
+status:
+  loadBalancer: {}
