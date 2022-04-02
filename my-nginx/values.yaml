@@ -5,6 +5,6 @@ replicaCount: 2
 contName: "nginx1"
 image:
   pullPolicy: Always
-  name: nginx
+  name: nginx:1.21
 service:
   type: NodePort
