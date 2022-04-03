@@ -5,7 +5,7 @@ replicaCount: 1
 contName: "nginx1"
 image:
   pullPolicy: Always
-  name: nginx:1.21
+  name: nginx
 hpa:
   pod: nginx
   minReplicas: 1
