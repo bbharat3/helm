@@ -35,9 +35,9 @@ spec:
               port: http
           resources:
             requests:
-              memory: 5Mi
+             
               cpu: 2m
           limits:
             requests:
-              memory: 10Mi
+             
               cpu: 200m
