@@ -1,0 +1,10 @@
+HPA:
+----
+Metrics server is required for HPA which captures metrics 
+
+It takes sometime for metrics to be reflected in hpa.
+
+By default 5 mins is the cooldown period.
+
+Issue:-
+Metrics server unable to capture metrics properly, if it HA is not setup 
