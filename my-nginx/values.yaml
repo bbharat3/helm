@@ -8,7 +8,7 @@ image:
   name: nginx
 hpa:
   pod: nginx
-  minReplicas: 1
+  minReplicas: 3
   maxReplicas: 25
   targetCPUUtilizationPercentage: 50
 service:
