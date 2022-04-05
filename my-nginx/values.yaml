@@ -8,8 +8,8 @@ image:
   name: nginx
 hpa:
   pod: nginx
-  minReplicas: 3
-  maxReplicas: 25
+  minReplicas: 1
+  maxReplicas: 5
   targetCPUUtilizationPercentage: 50
 service:
   type: NodePort
