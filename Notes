@@ -8,3 +8,14 @@ By default 5 mins is the cooldown period.
 
 Issue:-
 Metrics server unable to capture metrics properly, if it HA is not setup 
+
+Prometheus is having three components:-
+--------------------------------------
+1. Http Server
+2. Retrieval
+3. storage
+
+
+Http server is used for getting metrics from storage by prometheus
+Retrieval is used to fetch metrics from pods. It uses a pull mechanism
+only with short lived process push mechanism is used
