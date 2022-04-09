@@ -10,7 +10,7 @@ spec:
     targetRevision: HEAD
     path: my-nginx
   destination:
-    server: https://kubernetes.default.svc
+    server: https://kubernetes.default.svc           # internal service for k8s api server
     namespace: myapp                                 # optional required with default namespace
   syncPolicy:
     syncOptions:
