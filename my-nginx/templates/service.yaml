@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  
+  namespace: myapp
   labels:
     app.kubernetes.io/managed-by: Helm
     nodeType: test
@@ -9,7 +9,7 @@ metadata:
 spec:
   
   ports:
-  - port: 8080
+  - port: 9898
     protocol: TCP
     targetPort: 80
   selector:
