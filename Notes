@@ -6,6 +6,8 @@ It takes sometime for metrics to be reflected in hpa.
 
 By default 5 mins is the cooldown period.
 
+cpu and memory limits has to be set in order to configure hpa and scale with memory.
+
 Issue:-
 ------
 Metrics server unable to capture metrics properly, if it HA is not setup 
