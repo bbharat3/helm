@@ -10,6 +10,12 @@ Issue:-
 ------
 Metrics server unable to capture metrics properly, if it HA is not setup 
 
+Hpa was unable to fetch memory when app was deployed with argocd due to API version issue
+
+Resolution:
+-----------
+change the apiversion from autoscaling/v2 to autoscaling v2beta1 when app is deployed using argocd.
+
 Prometheus is having three components:-
 --------------------------------------
 1. Http Server
