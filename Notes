@@ -7,6 +7,7 @@ It takes sometime for metrics to be reflected in hpa.
 By default 5 mins is the cooldown period.
 
 Issue:-
+------
 Metrics server unable to capture metrics properly, if it HA is not setup 
 
 Prometheus is having three components:-
@@ -19,3 +20,39 @@ Prometheus is having three components:-
 Http server is used for getting metrics from storage by prometheus
 Retrieval is used to fetch metrics from pods. It uses a pull mechanism
 only with short lived process push mechanism is used
+
+
+Install Prometheus using helm
+==============================
+
+1. Add a repo 
+   helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+
+2. Update repo 
+   helm repo update
+
+3. Install kube Prometheus stack which includes alert manager, grafana, prometheus operator, state metrics, prometheus, node exporter.
+    
+    helm install <name> prometheus-community/kube-prometheus-stack  -n <namespace>
+
+Service Monitor : Service monitor describes the set of targets to be monitored by Prometheus.
+---------------
+
+List of the service monitor
+---------------------------
+
+kubectl get servicemonitor
+
+
+label release: prometheus is very important in the service monitor as prometheus find the service monitor and registers to the server and starts scarping
+
+
+Exporter is a translator which converts application data to prometheus understandable metrics and expose /metrics 
+-------- for prometheus to scrape
+
+Node Exporter translater the metrics of the cluster nodes
+-------------
+
+
+Adding target
+-------------
