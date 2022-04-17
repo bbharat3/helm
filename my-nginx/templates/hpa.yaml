@@ -2,16 +2,16 @@ apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 
 metadata:
-  name: { { .Values.hpa.pod } }
+  name: {{ .Values.hpa.pod }}
   labels:
-    nodeType: { { .Values.deployment.nodeType } }
+    nodeType: {{ .Values.deployment.nodeType }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: { { .Values.deployment.name } }
-  minReplicas: { { .Values.hpa.minReplicas } }
-  maxReplicas: { { .Values.hpa.maxReplicas } }
+    name: {{ .Values.deployment.name }}
+  minReplicas: {{ .Values.hpa.minReplicas }}
+  maxReplicas: {{ .Values.hpa.maxReplicas }}
   metrics:
   - type: Resource
     resource:
