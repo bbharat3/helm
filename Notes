@@ -1,5 +1,8 @@
 HPA:
 ----
+
+HPA is Horizontal pod autoscaler which increases the no. of replicas based on CPU and memory utilization.
+
 Metrics server is required for HPA which captures metrics 
 
 It takes sometime for metrics to be reflected in hpa.
@@ -17,6 +20,34 @@ Hpa was unable to fetch memory when app was deployed with argocd due to API vers
 Resolution:
 -----------
 change the apiversion from autoscaling/v2 to autoscaling v2beta1 when app is deployed using argocd.
+
+VPA:
+====
+
+VPA is vertical pod autoscalar which increases/decreases the resources of a pod by destroying old pod and creating a new pod.
+
+VPA is not installed by default in the cluster. Its a custom resource definition. Hence, it has to be installed separately.
+
+3 components which get deployed as a part it are :-
+
+1. Recommender             # recommends the change in pods resource request required
+2. Admission Controller    # connect with apiserver to get the config for vpa
+3. Updater                 # update the resource recommended by recommender
+
+Sample yaml:
+-----------
+apiVersion: autoscaling.k8s.io/v1         # api version which needs to be present
+kind: VerticalPodAutoscaler               # will be deployed as apart of crd
+metadata:
+  name: my-rec-vpa
+spec:
+  targetRef:                              # defining the target resource
+    apiVersion: "apps/v1"                 # api version of the object
+    kind:       Deployment                # target object type
+    name:       my-rec-deployment         # target object name
+  updatePolicy:
+    updateMode: "Off"                     # off is when it recommendation but doesnt update
+                                          # auto updates the pods as well
 
 Prometheus is having three components:-
 --------------------------------------
