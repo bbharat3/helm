@@ -1,3 +1,36 @@
+Static pods: the pods which are running on a specific node and is managed but kubelet
+-----------
+
+Probes:
+=======
+
+Liveness probe: which indicates if the container is running
+rediness probe indicates if the container is ready to serve request 
+startup probe indicates if the application within the cluster is started
+
+Mechanism to check :
+
+httpget
+tcpsocket
+exec
+grpc
+
+Services:
+=========
+services are most commonly used to abstract acess to pods but it can also support other backend types running outside cluster using endpoints and without selector.
+
+When Kubernetes processes a service description, and if the service selector matches a pod label, Kubernetes will automatically create an `Endpoints` object with the same name as the service, which stores the pod’s IP address and port
+
+`Endpoints` are used to connect a service with backend pods or services
+
+To define a headless service(without selector) add `clusterIP: None` in spec of the service whereas for service with selector add `type` of the service
+
+Different types of services with selectors:
+`NodePort`
+`ClusterIP`
+`LoadBalancer`
+
+
 HPA:
 ----
 
@@ -95,3 +128,87 @@ Node Exporter translater the metrics of the cluster nodes
 
 Adding target
 -------------
+
+
+
+CGroups are responsible metering and limiting for allocating resources.
+-------
+
+Memory Cgroup
+=============
+It has  a soft limit and hard limit.
+
+If the hard limit is reached, the process get killed randomly in that cgroup level which is the reason for putting only one service in a container which improves granularity and if the limit is reached, it process in that specific container is killed.
+
+Soft limits are not enforced. Containers works fine above the soft limit. However, if the host is going OOM and need more memory then, it looks at the cgroups which are having usage above soft limit and the memory is taken from there by the kernel.
+
+
+CPU CGroup:
+===========
+keeps a track of cpu usage
+no limits but can be set as percent
+Dedicate CPU to process so that the process doesnt  move from one cpu to another
+
+Block IO
+========
+keeps track of I/O for each group
+set throttle(limits) for each group
+
+Net_cls and net_prio  cgroup
+============================
+
+Devices cgroup
+==============
+controls which group can read and write on device nodes
+
+Freezer cgroup
+==============
+
+
+Namespace
+==========
+it limits what you can see 
+
+multiple namespaces
+-------------------
+pid
+mnt
+net
+uts
+ipc
+user
+
+each process is in one namespace of each type ( a process will be in pid namespace and then mnt namespace and so on).
+
+pid namespace: process within PID namespace can see only process in the same PID namespace
+-------------
+net namespace: process within a network namespace get their own private network stack
+-------------
+
+mnt namespace lets each container mount anything which will be visible in that container.
+--------------
+
+uts namespace lets a unique hostname
+-------------
+
+ipc namespace allows a process to have their own IPC semaphores, IPC shared memory and IPC message queues.
+
+User namespace: maps UID within a container.  
+--------------
+root in the container is different from root in host.
+
+
+new ns is created when new process is created and extra flag is added to process that it has to be in new ns.
+it is present in /proc/pid/ns
+
+Copy on write
+--------------
+
+
+Container runtimes using CGroups and namespaces
+------------------------------------------------
+
+systemd recently added support for docker
+
+
+performance will be same on all cri
