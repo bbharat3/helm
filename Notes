@@ -30,6 +30,19 @@ Different types of services with selectors:
 `ClusterIP`
 `LoadBalancer`
 
+CNI:
+===
+It is an interface between container runtime interface and network. It also configures network routes.
+
+All containers within a pod have same ip address which is provided by CNI but the container are configured with different ports.
+
+all the containers within a pod can communicate with each other using localhost.
+
+All pods and nodes can communication with other pods without NAT as the ip of the pods is same in a cluster which is managed by CNI.
+
+NetworkPolicy
+-------------
+It is used to manage network policies between pods
 
 HPA:
 ----
