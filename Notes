@@ -30,6 +30,8 @@ Different types of services with selectors:
 `ClusterIP`
 `LoadBalancer`
 
+`StatefulSet`:
+
 CNI:
 ===
 It is an interface between container runtime interface and network. It also configures network routes.
@@ -95,15 +97,17 @@ spec:
     updateMode: "Off"                     # off is when it recommendation but doesnt update
                                           # auto updates the pods as well
 
-Prometheus is having three components:-
+`Prometheus` is having three components:-
 --------------------------------------
 1. Http Server
 2. Retrieval
 3. storage
 
 
-Http server is used for getting metrics from storage by prometheus
-Retrieval is used to fetch metrics from pods. It uses a pull mechanism
+Http server is used for getting metrics from storage by prometheus.
+
+Retrieval is used to fetch metrics from pods. It uses a pull mechanism.
+
 only with short lived process push mechanism is used
 
 
@@ -120,36 +124,57 @@ Install Prometheus using helm
     
     helm install <name> prometheus-community/kube-prometheus-stack  -n <namespace>
 
-Service Monitor : Service monitor describes the set of targets to be monitored by Prometheus.
----------------
+`Service Monitor` : Service monitor describes the set of targets to be monitored by Prometheus.
 
-List of the service monitor
+if `serviceMonitorSelectorNilUsesHelmValues: true` is set in values.yaml for the helm chart
+`serviceMonitorSelector:<somelabel>` is used to scrape metrics which is configured in the prometheus.yaml in helm chart. This setting is a part of crd prometheuses.monitoring.coreos.com.
+
+`serviceMonitorSelector` means search all the service monitors which has the matching label else it will not be discovered by prometheus
+
+Sample Code from prometheus.yaml
+================================
+<!-- {{ else if .Values.prometheus.prometheusSpec.serviceMonitorSelectorNilUsesHelmValues  }}
+  serviceMonitorSelector:
+    matchLabels:
+      release: {{ $.Release.Name | quote }} -->
+
+In the above code release label is set to release name of the helm chart deployed which is provided by user in the below command
+
+>> helm install <re>
+
+
+List of the `service monitor`
 ---------------------------
 
 kubectl get servicemonitor
 
 
-label release: prometheus is very important in the service monitor as prometheus find the service monitor and registers to the server and starts scarping
+label `release: prometheus` is very important in the service monitor as prometheus find the service monitor and registers to the server and starts scarping.
 
 
-Exporter is a translator which converts application data to prometheus understandable metrics and expose /metrics 
--------- for prometheus to scrape
+
+`Exporter` is a translator which converts application data to prometheus understandable metrics and expose /metrics for prometheus to scrape
 
 Node Exporter translater the metrics of the cluster nodes
 -------------
 
 
-Adding target
--------------
+`Adding target`
+
+Prometheus needs 3 things to scrape metrics
+============================================
+1.  `Exporter application`: It exposes /metrics enpoint
+2.  `Exporter service`: service which will connect to the exporter 
+3.  `Servicemonitor`: to be discovered by prometheus 
 
 
 
-CGroups are responsible metering and limiting for allocating resources.
--------
+`CGroups` are mechanism responsible metering and limiting for allocating resources.
+These are a way to classify all the process running in a system in a hierarchical groups
 
 Memory Cgroup
 =============
-It has  a soft limit and hard limit.
+It has  a `soft limit and hard limit`.
 
 If the hard limit is reached, the process get killed randomly in that cgroup level which is the reason for putting only one service in a container which improves granularity and if the limit is reached, it process in that specific container is killed.
 
@@ -165,6 +190,7 @@ Dedicate CPU to process so that the process doesnt  move from one cpu to another
 Block IO
 ========
 keeps track of I/O for each group
+control and monitor access to block devices.
 set throttle(limits) for each group
 
 Net_cls and net_prio  cgroup
@@ -176,11 +202,16 @@ controls which group can read and write on device nodes
 
 Freezer cgroup
 ==============
+This is used while migrating a container from one system to another system then the cgroup is freezed which means all the processes are freezed before migration and once the migration is complete unfreeze command is sent to the entire cgroup
+
 
 
 Namespace
 ==========
-it limits what you can see 
+it limits what you can see. It is a kernel feature to group task into namespace of a kind.
+these are the particular view of a process
+
+`unshare` command is used to create a namespace in linux 
 
 multiple namespaces
 -------------------
@@ -190,25 +221,34 @@ net
 uts
 ipc
 user
+cgroups
 
 each process is in one namespace of each type ( a process will be in pid namespace and then mnt namespace and so on).
 
-pid namespace: process within PID namespace can see only process in the same PID namespace
--------------
-net namespace: process within a network namespace get their own private network stack
--------------
+`pid namespace`: process within PID namespace can see only process in the same PID namespace
+Process in a namespace start with PID 1 which has a different PID on the host machine
 
-mnt namespace lets each container mount anything which will be visible in that container.
+`net namespace`: process within a network namespace get their own private network stack. A particular device can be connected to only 1  namespace
+
+`Internet access to container:`
+
+create a veth outside the main system and attach it to  the container. Provide and IP address to the veth and the main system and create a bridge connection between them.
+
+
+`mnt namespace` lets each container mount anything which will be visible in that container.
 --------------
 
-uts namespace lets a unique hostname
+`uts namespace` lets a unique hostname
 -------------
 
-ipc namespace allows a process to have their own IPC semaphores, IPC shared memory and IPC message queues.
+`ipc namespace` allows a process to have their own IPC semaphores, IPC shared memory and IPC message queues.
+--------------
 
-User namespace: maps UID within a container.  
+`User namespace`: maps UID within a container.  
 --------------
 root in the container is different from root in host.
+
+`persistent namespace`
 
 
 new ns is created when new process is created and extra flag is added to process that it has to be in new ns.
